@@ -4,7 +4,8 @@ Using Rselenium to check keyword and ad rankings positions in yahoo and google.
 
 Selenium server will be needed. 
 
-> P.S.
+
+# P.S.
 >>
 >> It's just for 'ASSISTING' manual processing. 
 >>
