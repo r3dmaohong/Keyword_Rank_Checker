@@ -1,4 +1,4 @@
-### Checking keyword and ad rankings positions in yahoo and google
+## Checking keyword and ad rankings positions in yahoo and google
 
 Using Rselenium to check keyword and ad rankings positions in yahoo and google.
 
