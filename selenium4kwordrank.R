@@ -5,7 +5,8 @@
 
 #' @note It's just for 'ASSISTING' manual processing. 
 #'       Maybe it will be detected as bot.
-#'       Becareful.
+#'       Therefore, I add many inefficient code blocks for google checker...
+#'       Nevertheless, I still can't guarantee that google won't detected as BOT.
 
 ## Run selenium server
 # cmd
@@ -48,7 +49,7 @@ dat <- readClipboard()
 #' Website's url
 grepltext = "hs.1111"
 
-#' YAHOO
+#' YAHOO Checker
 ###########
 yahoo_start = Sys.time()
 
@@ -64,7 +65,7 @@ for(i in 1:length(dat)){
   remDr$navigate(url)
   status = T
   
-  #remDr$deleteAllCookies()
+  remDr$deleteAllCookies()
   
   while(status){
     status = F
@@ -95,7 +96,7 @@ for(i in 1:length(dat)){
     }
     Sys.sleep(runif(1,3,6))
     
-    if(page <= 3){#(toString(rank_links)=="" & page<=6){
+    if(page < 3){#(toString(rank_links)=="" & page<=6){
       status = T
       webElem <- remDr$findElement("css selector", ".next")
       remDr$mouseMoveToLocation(webElement = webElem) # move to the required element
@@ -133,7 +134,7 @@ yahoo_end - yahoo_start
 
 
 
-#' GOOGLE
+#' GOOGLE Checker
 ###########
 google_start = Sys.time()
 
@@ -162,13 +163,22 @@ if(TRUE){
     #url = paste0("https://www.google.com.tw/search?q=", iconv(query, to="UTF-8"))
     #remDr$navigate(url)# website to crawl
     status = T
-    #remDr$deleteAllCookies()
+    remDr$deleteAllCookies()
     
     while(status){
       #' Bot verification. Stop!
       if(grepl("sorry", unlist(remDr$getCurrentUrl()))){
         sorry_break = TRUE
         break
+      }
+      
+      webElem <- remDr$findElement("css", "body")
+      
+      # I hate been detected as BOT...
+      #rnd_down_times <- floor(runif(1, 2, 4))
+      for(i_down_times in 1:3){#rnd_down_times){
+        Sys.sleep(runif(1, 0.5, 5))
+        webElem$sendKeysToElement(list(key = "page_down"))
       }
       
       status = F
@@ -189,9 +199,9 @@ if(TRUE){
       if(grepl("NA", toString(output_google$rank[i]), fixed = T)){
         output_google$rank[i] = paste0(page, "-", rank_links[1])
       }
-      Sys.sleep(runif(1, 10, 20))
+      Sys.sleep(runif(1, 5, 10))
       
-      if(page <= 3){#(toString(rank_links)=="" & page<=6){
+      if(page < 3){#(toString(rank_links)=="" & page<=6){
         status = T
         webElem <- remDr$findElement("css selector", "#pnnext")
         remDr$mouseMoveToLocation(webElement = webElem) # move to the required element
@@ -199,6 +209,7 @@ if(TRUE){
         page = page + 1 
       }else{
         status = F
+        webElem$sendKeysToElement(list(key = "home"))
       }
     }
     if(sorry_break==TRUE){
@@ -209,7 +220,7 @@ if(TRUE){
     print(query)
     print(output_google$ad[i])
     print(output_google$rank[i])
-    Sys.sleep(runif(1, 10, 20))
+    Sys.sleep(runif(1, 10, 23))
   }
   
   
