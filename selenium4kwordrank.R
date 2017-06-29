@@ -65,31 +65,43 @@ for(i in 1:length(dat)){
   remDr$navigate(url)
   status = T
   
-  remDr$deleteAllCookies()
+  #remDr$deleteAllCookies()
   
   while(status){
     status = F
     page_source <- remDr$getPageSource()
     html_source <- read_html(page_source[[1]])
     
+    # Yahoo is updating their website these days...
     #links <- html_source %>% html_nodes(".wr-bw") %>%  html_text()
-    links <- html_source %>% html_nodes(".fw-m") %>%  html_text()
+    #links <- html_source %>% html_nodes(".fw-m") %>%  html_text()
+    #links <- html_source %>% html_nodes(".compTitle") %>%  html_text()
+    links <- html_source %>% html_nodes("ol li span") %>%  html_text()
     links <- links[grepl("[0-9a-zA-Z]+[.][0-9a-zA-Z]+", links)]
     
-    top    <- html_source %>% html_nodes(".searchCenterTopAds .layoutCenter") %>%  html_text() # .compText
-    right  <- html_source %>% html_nodes(".searchRightBottomAds .layoutCenter") %>%  html_text()
-    bottom <- html_source %>% html_nodes(".searchCenterBottomAds .layoutCenter") %>%  html_text()
+    if(length(links)!=10){
+      tkmessageBox(title = "Warning!",
+                   message = "Check the CSS, maybe it's updated!", 
+                   icon = "warning", 
+                   type = "ok") 
+    }
+    
+    top    <- html_source %>% html_nodes(".searchCenterTopAds .layoutMiddle") %>%  html_text() # .compText
+    right  <- html_source %>% html_nodes(".searchRightBottomAds .layoutMiddle") %>%  html_text() #.layoutCenter
+    bottom <- html_source %>% html_nodes(".searchCenterBottomAds .layoutMiddle") %>%  html_text()
     
     rank_links    <- which(grepl(grepltext, links, fixed = T))
-    rank_topad    <- which(grepl(grepltext, top, fixed = T))
-    rank_rightad  <- which(grepl(grepltext, right, fixed = T))
-    rank_bottomad <- which(grepl(grepltext, bottom, fixed = T))
+    rank_topad    <- which(grepl(grepltext, top, fixed = T)) %>% toString() %>% as.numeric()
+    rank_rightad  <- which(grepl(grepltext, right, fixed = T)) %>% toString() %>% as.numeric()
+    rank_bottomad <- which(grepl(grepltext, bottom, fixed = T)) %>% toString() %>% as.numeric()
     
-    pos <- which(c(rank_topad, rank_rightad, rank_bottomad) == min(c(rank_topad, rank_rightad, rank_bottomad), na.rm = T))
+    ad_pos <- c(rank_topad, rank_rightad, rank_bottomad)
+    
+    pos <- which(ad_pos == min(c(rank_topad, rank_rightad, rank_bottomad), na.rm = T))
     output_yahoo$query[i] = query
     
     if(grepl("NA", toString(output_yahoo$ad[i])) | grepl("Inf", toString(output_yahoo$ad[i]))){
-      output_yahoo$ad[i] = paste0(page, "-", ad_place[pos][1], "-", min(c(rank_topad, rank_rightad, rank_bottomad), na.rm = T))
+      output_yahoo$ad[i] = paste0(page, "-", ad_place[pos][1], "-", ad_pos[pos[1]])
     }
     if(grepl("NA", toString(output_yahoo$rank[i]), fixed = T)){
       output_yahoo$rank[i] = paste0(page, "-", rank_links[1])
@@ -149,7 +161,7 @@ if(TRUE){
     page  = 1
     query = dat[i]
     
-    if(i == 1){
+    if(TRUE){#i == 1){
       remDr$navigate("https://www.google.com.tw/")
     }
     webElem_sch <- remDr$findElement(using = 'css',
@@ -221,6 +233,9 @@ if(TRUE){
     print(output_google$ad[i])
     print(output_google$rank[i])
     Sys.sleep(runif(1, 10, 23))
+    
+    remDr$quit()
+    remDr$open()
   }
   
   
