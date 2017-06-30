@@ -8,9 +8,14 @@
 #'       Therefore, I add many inefficient code blocks for google checker...
 #'       Nevertheless, I still can't guarantee that google won't detected as BOT.
 
+# Version
+## Firefox: 47.0.2 (https://ftp.mozilla.org/pub/firefox/releases/47.0.2/win32/zh-TW/Firefox%20Setup%2047.0.2.exe)
+## Selenium sever: 2.53.1
+
 ## Run selenium server
 # cmd
 # java -jar selenium-server-standalone-2.53.1.jar
+#selenium-server-standalone-3.4.0.jar
 library(RSelenium)
 library(rvest)
 library(httr)
