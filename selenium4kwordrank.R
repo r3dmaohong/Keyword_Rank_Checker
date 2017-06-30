@@ -76,7 +76,8 @@ for(i in 1:length(dat)){
     #links <- html_source %>% html_nodes(".wr-bw") %>%  html_text()
     #links <- html_source %>% html_nodes(".fw-m") %>%  html_text()
     #links <- html_source %>% html_nodes(".compTitle") %>%  html_text()
-    links <- html_source %>% html_nodes("ol li span") %>%  html_text()
+    #links <- html_source %>% html_nodes("ol li .algo-sr span") %>%  html_text()
+    links <- html_source %>% html_nodes(".algo-sr span") %>%  html_text()
     links <- links[grepl("[0-9a-zA-Z]+[.][0-9a-zA-Z]+", links)]
     
     if(length(links)!=10){
@@ -161,6 +162,8 @@ if(TRUE){
     page  = 1
     query = dat[i]
     
+    remDr$open(silent = TRUE)
+    
     if(TRUE){#i == 1){
       remDr$navigate("https://www.google.com.tw/")
     }
@@ -235,7 +238,6 @@ if(TRUE){
     Sys.sleep(runif(1, 10, 23))
     
     remDr$quit()
-    remDr$open()
   }
   
   
