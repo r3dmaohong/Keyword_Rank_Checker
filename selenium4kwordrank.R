@@ -83,7 +83,19 @@ for(i in 1:length(dat)){
     #links <- html_source %>% html_nodes(".compTitle") %>%  html_text()
     #links <- html_source %>% html_nodes("ol li .algo-sr span") %>%  html_text()
     links <- html_source %>% html_nodes(".algo-sr span") %>%  html_text()
-    links <- links[grepl("[0-9a-zA-Z]+[.][0-9a-zA-Z]+", links)]
+    links <- links[links!="-"]
+    
+    sep_nodes <- html_source %>% html_nodes(".clrGrey") %>% html_text() %>% unique
+    sep_nodes <- sep_nodes[sep_nodes!="-"]
+    del_nodes <- c(which(links %in% sep_nodes), 
+                   which(links %in% sep_nodes) + 1,
+                   which(links %in% (html_source %>% html_nodes(".d-b") %>% html_text())),
+                   which(links %in% (html_source %>% html_nodes(".fz-s") %>% html_text())))
+    
+    if(toString(del_nodes)!="")
+      links <- links[-del_nodes]
+    links <- links[!grepl("^.[0-9].天前", links)]
+    #links <- links[grepl("[0-9a-zA-Z]+[.][0-9a-zA-Z]+", links)]
     
     if(length(links)!=10){
       tkmessageBox(title = "Warning!",
@@ -242,7 +254,11 @@ if(TRUE){
     print(output_google$rank[i])
     Sys.sleep(runif(1, 10, 23))
     
-    remDr$quit()
+    tryCatch({
+      remDr$quit()
+    }, error = function(e) {
+      print("Browser closed.")
+    })
   }
   
   
