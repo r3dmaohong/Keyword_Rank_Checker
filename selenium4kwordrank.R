@@ -20,6 +20,7 @@ library(RSelenium)
 library(rvest)
 library(httr)
 library(tcltk)
+library(gmailr)
 
 setwd("git/keyword_rank_checker")
 
@@ -278,10 +279,22 @@ output_google$ad[grepl("Inf", output_google$ad, fixed = T)]     <- "x"
 output_google$rank[grepl("Inf", output_google$rank, fixed = T)] <- "x"
 output_google$rank <- paste0("'", output_google$rank)
 output_google$ad   <- paste0("'", output_google$ad)
+
+google_fn <- paste0("output/google_", format(Sys.time(), "%Y_%m_%d_%H%M%S"), ".csv")
 write.csv(output_google, 
-          paste0("output/google_", format(Sys.time(), "%Y_%m_%d_%H%M%S"), ".csv"), 
+          google_fn, 
           row.names = F)
 
 google_end = Sys.time()
 google_end - google_start
+
+html_msg <- mime() %>%
+  to(c("@gmail.com", "@gmail.com")) %>%
+  from("@gmail.com") %>%
+  html_body("")
+file_attachment <- html_msg %>%
+  subject("Keyword Rank Check From BOT Mao") %>%
+  attach_file(google_fn)
+
+send_message(file_attachment)
 ###########
