@@ -218,7 +218,7 @@ if(TRUE){
       page_source <- remDr$getPageSource()
       html_source <- read_html(page_source[[1]])
       
-      links <- html_source %>% html_nodes(".srg ._Rm") %>%  html_text()
+      links <- html_source %>% html_nodes("._Rm") %>%  html_text()# %>% html_nodes(".srg ._Rm") %>%  html_text()
       ad    <- html_source %>% html_nodes(".ads-ad") %>%  html_text() # .compText
       
       rank_links <- which(grepl(grepltext, links, fixed = T))
