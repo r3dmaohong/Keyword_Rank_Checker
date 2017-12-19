@@ -1,12 +1,12 @@
 #'
-#' @title Checking keyword and ad rankings positions in yahoo and google
+#' @title Checking keyword and ad rankings positions in google
 #' @author r3dmaohong
 #' @keywords Rselenium, docker
 
 #' @note It's just for 'ASSISTING' manual processing. 
-#'       Maybe it will be detected as bot.
-#'       Therefore, I add many inefficient code blocks for google checker...
-#'       Nevertheless, I still can't guarantee that google won't detected as BOT.
+#'       Maybe it will be detected as BOT.
+#'       Therefore, I add many inefficient code blocks in the code...
+#'       Nevertheless, I still can't guarantee that google won't detected it as BOT.
 
 library(RSelenium)
 library(rvest)
@@ -38,17 +38,15 @@ remDr <- remoteDriver(browserName = "chrome",
 ( dat <- read_clip() )
 
 #' Website's url
-grepltext = "hs.1111"
+grepltext = ""
 
-#' GOOGLE Checker
-###########
 google_keyword_ad_checker <- function(remDr, dat, grepltext, mail_from, mail_to){
   print('Start')
   google_start = Sys.time()
   
   output_google <- data.frame('query' = dat, 'ad' = "NA", 'rank' = "NA", stringsAsFactors = F)
   
-  #' Stop the program when been detected as bot by google.
+  #' Stop the program when been detected as BOT by google.
   sorry_break <- FALSE
   
   #' Main program
@@ -84,7 +82,6 @@ google_keyword_ad_checker <- function(remDr, dat, grepltext, mail_from, mail_to)
         
         webElem <- remDr$findElement("css", "body")
         
-        # I hate been detected as BOT...
         #rnd_down_times <- floor(runif(1, 2, 4))
         for(i_down_times in 1:3){#rnd_down_times){
           Sys.sleep(runif(1, 0.5, 5))
@@ -111,6 +108,7 @@ google_keyword_ad_checker <- function(remDr, dat, grepltext, mail_from, mail_to)
         }
         Sys.sleep(runif(1, 5, 10))
         
+        # max pages
         if(page < 3){#(toString(rank_links)=="" & page<=6){
           status = T
           webElem <- remDr$findElement("css selector", "#pnnext")
@@ -135,7 +133,7 @@ google_keyword_ad_checker <- function(remDr, dat, grepltext, mail_from, mail_to)
       tryCatch({
         remDr$quit()
       }, error = function(e) {
-        print("Browser closed.")
+        print("The browser is closed.")
       })
     }
     
@@ -181,8 +179,8 @@ google_keyword_ad_checker <- function(remDr, dat, grepltext, mail_from, mail_to)
 ###########
 
 result <- google_keyword_ad_checker(remDr, dat, grepltext, 
-                             mail_from = '@gmail.com', 
-                             mail_to = '@gmail.com')
+                             mail_from = '', 
+                             mail_to = '')
 
 #' docker-machine stop default
 #' docker-machine ls
