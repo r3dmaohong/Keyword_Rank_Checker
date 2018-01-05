@@ -28,8 +28,9 @@ setwd("workspace/datascience/r/crawler/keyword_rank_checker")
 
 #' Settings for browser
 ######################## 
+system('docker run -d -p 4445:4444 selenium/standalone-chrome')
 remDr <- remoteDriver(browserName = "chrome",
-                      remoteServerAddr = "192.168.99.100",
+                      remoteServerAddr = "localhost",
                       port = 4445L
                       )
 ########################
@@ -38,7 +39,7 @@ remDr <- remoteDriver(browserName = "chrome",
 ( dat <- read_clip() )
 
 #' Website's url
-grepltext = ""
+grepltext = "hs.1111"
 
 google_keyword_ad_checker <- function(remDr, dat, grepltext, mail_from, mail_to){
   print('Start')
@@ -180,7 +181,7 @@ google_keyword_ad_checker <- function(remDr, dat, grepltext, mail_from, mail_to)
 
 result <- google_keyword_ad_checker(remDr, dat, grepltext, 
                              mail_from = '', 
-                             mail_to = '')
+                             mail_to = 'r')
 
 #' docker-machine stop default
 #' docker-machine ls
