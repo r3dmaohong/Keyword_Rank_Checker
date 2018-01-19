@@ -39,9 +39,9 @@ remDr <- remoteDriver(browserName = "chrome",
 ( dat <- read_clip() )
 
 #' Website's url
-grepltext = "hs.1111"
+grepltext = ""
 
-google_keyword_ad_checker <- function(remDr, dat, grepltext, mail_from, mail_to){
+google_keyword_ad_checker <- function(remDr, dat, grepltext, ads, mail_from, mail_to){
   print('Start')
   google_start = Sys.time()
   
@@ -110,7 +110,7 @@ google_keyword_ad_checker <- function(remDr, dat, grepltext, mail_from, mail_to)
         Sys.sleep(runif(1, 5, 10))
         
         # max pages
-        if(page < 3){#(toString(rank_links)=="" & page<=6){
+        if((toString(rank_links)=="" & page<3) | (ads==TRUE & page<3)){#page < 3){
           status = T
           webElem <- remDr$findElement("css selector", "#pnnext")
           remDr$mouseMoveToLocation(webElement = webElem) # move to the required element
@@ -129,6 +129,10 @@ google_keyword_ad_checker <- function(remDr, dat, grepltext, mail_from, mail_to)
       print(query)
       print(output_google$ad[i])
       print(output_google$rank[i])
+      
+      ##
+      tmp <<- output_google
+      
       Sys.sleep(runif(1, 10, 23))
       
       tryCatch({
@@ -180,8 +184,9 @@ google_keyword_ad_checker <- function(remDr, dat, grepltext, mail_from, mail_to)
 ###########
 
 result <- google_keyword_ad_checker(remDr, dat, grepltext, 
-                             mail_from = '', 
-                             mail_to = 'r')
+                                    ads = TRUE,
+                                    mail_from = '', 
+                                    mail_to = '')
 
 #' docker-machine stop default
 #' docker-machine ls
