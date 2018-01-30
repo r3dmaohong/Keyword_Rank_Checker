@@ -35,12 +35,6 @@ remDr <- remoteDriver(browserName = "chrome",
                       )
 ########################
 
-#' Import Keywords
-( dat <- read_clip() )
-
-#' Website's url
-grepltext = ""
-
 google_keyword_ad_checker <- function(remDr, dat, grepltext, ads, mail_from, mail_to){
   print('Start')
   google_start = Sys.time()
@@ -183,10 +177,47 @@ google_keyword_ad_checker <- function(remDr, dat, grepltext, ads, mail_from, mai
 }
 ###########
 
+#' Import Keywords
+( dat <- read_clip() )
+#' Website's url
+grepltext = ""
+
+mail_from = '' 
+mail_to = ''
+
+
+## scheduled
+times <- seq(as.POSIXct(paste0(Sys.Date(), " 08:50:00")), as.POSIXct(paste0(Sys.Date(), " 16:50:00")), by="hour")
+
+x <- 1
+while(x<=length(times)){
+  if(Sys.time()>=times[x]){
+    print( paste0(rep("===", 5), collapse = "") )
+    print(paste0(x, '. Start at ', Sys.time()))
+    result <- google_keyword_ad_checker(remDr, dat, grepltext, 
+                                        ads = TRUE,
+                                        mail_from, 
+                                        mail_to)
+    print( paste0(rep("===", 5), collapse = "") )
+    x <- x + 1
+  }else{
+    sleep_time <- ceiling((as.numeric(times[x] - Sys.time())*60))
+    
+    print( paste0(rep("===", 5), collapse = "") )
+    print( paste0('Now: ', format(Sys.time(), '%Y-%m-%d %H:%M:%S')) )
+    print( paste0('Wait for next schedule: ', format(times[x], '%Y-%m-%d %H:%M:%S')) )
+    print(paste0('Sleep for about ', sleep_time, ' secs (', 
+                 format(round(sleep_time/60, 2), nsmall = 2), ' mins).'))
+    print( paste0(rep("===", 5), collapse = "") )
+    Sys.sleep(sleep_time)
+  }
+}
+
+## or 
 result <- google_keyword_ad_checker(remDr, dat, grepltext, 
                                     ads = TRUE,
-                                    mail_from = '', 
-                                    mail_to = '')
+                                    mail_from, 
+                                    mail_to)
 
 #' docker-machine stop default
 #' docker-machine ls
