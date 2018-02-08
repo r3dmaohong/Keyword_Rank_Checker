@@ -182,7 +182,7 @@ google_keyword_ad_checker <- function(remDr, dat, grepltext, ads, mail_from, mai
 #' Website's url
 grepltext = ""
 
-mail_from = '' 
+mail_from = ''
 mail_to = ''
 
 
