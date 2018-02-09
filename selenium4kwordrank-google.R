@@ -90,8 +90,8 @@ google_keyword_ad_checker <- function(remDr, dat, grepltext, ads, mail_from, mai
         links <- html_source %>% html_nodes("._Rm") %>%  html_text()# %>% html_nodes(".srg ._Rm") %>%  html_text()
         ad    <- html_source %>% html_nodes(".ads-ad") %>%  html_text() # .compText
         
-        rank_links <- which(grepl(grepltext, links, fixed = T))
-        rank_ad    <- which(grepl(grepltext, ad, fixed = T))
+        rank_links <- which(grepl(grepltext, links))
+        rank_ad    <- which(grepl(grepltext, ad))
         
         output_google$query[i] = query
         
@@ -182,7 +182,7 @@ google_keyword_ad_checker <- function(remDr, dat, grepltext, ads, mail_from, mai
 #' Website's url
 grepltext = ""
 
-mail_from = ''
+mail_from = '' 
 mail_to = ''
 
 
