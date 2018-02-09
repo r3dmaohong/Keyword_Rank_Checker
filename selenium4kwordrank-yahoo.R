@@ -68,10 +68,10 @@ yahoo_keyword_ad_checker <- function(remDr, dat, grepltext, ads, mail_from, mail
       right  <- html_source %>% html_nodes(".searchRightBottomAds .layoutMiddle") %>%  html_text() #.layoutCenter
       bottom <- html_source %>% html_nodes(".searchCenterBottomAds .layoutMiddle") %>%  html_text()
       
-      rank_links    <- which(grepl(grepltext, links, fixed = T))
-      rank_topad    <- which(grepl(grepltext, top, fixed = T)) %>% toString() %>% as.numeric()
-      rank_rightad  <- which(grepl(grepltext, right, fixed = T)) %>% toString() %>% as.numeric()
-      rank_bottomad <- which(grepl(grepltext, bottom, fixed = T)) %>% toString() %>% as.numeric()
+      rank_links    <- which(grepl(grepltext, links))
+      rank_topad    <- which(grepl(grepltext, top)) %>% toString() %>% as.numeric()
+      rank_rightad  <- which(grepl(grepltext, right)) %>% toString() %>% as.numeric()
+      rank_bottomad <- which(grepl(grepltext, bottom)) %>% toString() %>% as.numeric()
       
       ad_pos <- c(rank_topad, rank_rightad, rank_bottomad)
       
